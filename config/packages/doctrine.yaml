@@ -8,6 +8,13 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+
+        # Encodage et collation
+        charset: utf8mb4
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
+            engine: InnoDB
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
