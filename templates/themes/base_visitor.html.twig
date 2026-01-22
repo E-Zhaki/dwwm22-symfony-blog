@@ -45,7 +45,7 @@
                     
         </head>
 
-        <body class= "bg-primary">
+        <body class= "bg-primary body-visitor">
 
         {# Navbar #}
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -81,9 +81,15 @@
                 </div>
             </nav>
 
+            {# Main #}
 
-            <h1 class= "text-center">Bonjour Docteur !</h1>
+            <main>
+            {% block Main %}{% endblock %}
+            </main>
 
-
+            {# Footer #}
+            <footer class="text-center">
+            <p>DWWM22</p>
+            </footer>
         </body>
     </html>
