@@ -10,7 +10,6 @@
 
 3. Développer la fonctionnalité
 
-
 ## Comment livrer notre code après avoir développé une fonctionnalité?
 
 1. Vérifier la syntaxe du code
@@ -45,7 +44,6 @@
         - (Pull Request)
     - Après la revue de code, fusionner le brouillon (branche) au main 
         - (Merge Request) 
-
     - En local,
         - Switcher sur la branche `main`
         - Mettre à jour cette branche `git pull origin main`
