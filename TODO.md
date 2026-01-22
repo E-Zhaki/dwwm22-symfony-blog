@@ -10,7 +10,6 @@
 
 3. Développer la fonctionnalité
 
-
 ## Comment livrer notre code après avoir développé une fonctionnalité?
 
 1. Vérifier la syntaxe du code
