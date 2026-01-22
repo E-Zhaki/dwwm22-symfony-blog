@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inscription | Médecine du Monde - Blog santé du Dr Jean Dupont</title>
+
+        {# Seo #}
+        <meta name="robots" content="index, follow">
+        <meta name="description" content="Inscrivez-vous au blog Médecine du Monde pour accéder à des contenus santé fiables, suivre les nouveaux articles médicaux et participer aux échanges autour de la prévention et du bien-être.">
+        <meta name="keywords" content="inscription blog santé, compte utilisateur santé, blog médical inscription, médecine du monde inscription">
+        <meta name="author" content="Dwwm22">
+        <meta name="publisher" content="Dwwm22">
+
+        {# Webpack Encore #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+
+        {# Favicon #}
+        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+        <link rel="shortcut icon" href="/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="manifest" href="/site.webmanifest">
+
+        {# Google Font #}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">        
+    </head>
+    <body>
+        <main>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <img class="img-fluid" src="/images/static/doctor-jean-dupont-inscription.png" alt="Docteur Jean Dupont vous invite à vous inscrire">
+                    </div>
+                    <div class="col-lg-6">
+                        <h1 class="text-center my-3">Inscription</h1>
+
+                        {{form_start(registrationForm)}}
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="registration_form_firstName">Prénom <span class="text-danger">*</span></label>
+                                        {{form_widget(registrationForm.firstName, {'attr': {'class':'form-control', 'autofocus':'autofocus'}})}}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="registration_form_lastName">Nom <span class="text-danger">*</span></label>
+                                        {{form_widget(registrationForm.lastName, {'attr': {'class':'form-control'}})}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registration_form_email">Email <span class="text-danger">*</span></label>
+                                {{form_widget(registrationForm.email, {'attr': {'class':'form-control'}})}}
+                            </div>
+                            <div class="mb-3">
+                                <label for="registration_form_password_first">Mot de passe <span class="text-danger">*</span></label>
+                                {{form_widget(registrationForm.password.first, {'attr': {'class':'form-control', 'placeholder': 'Au moins 12 caractères'}})}}
+                                <small>Au moins une lettre minuscule, majuscule, un chiffre et un caractère spécial.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registration_form_password_second">Confirmation du mot de passe <span class="text-danger">*</span></label>
+                                {{form_widget(registrationForm.password.second, {'attr': {'class':'form-control'}})}}
+                            </div>
+                            <div class="mb-3">
+                                {{form_widget(registrationForm.agreeTerms)}} 
+                                <label for="registration_form_agreeTerms">
+                                    Lire et accepter <a href="">les conditions générales d'utilisation</a>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="submit" class="btn btn-primary w-100 shadow" value="S'inscrire">
+                            </div>
+                        {{form_end(registrationForm)}}
+
+                        <div class="d-flex flex-column justify-content-center align-items-center my-4">
+                            <p>Vous avez déjà un compte? <a href="">Connectez-vous</a></p>
+                            <p><a href="{{path('app_visitor_welcome')}}">Retour à l'accueil</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
+
+{# <!DOCTYPE html>
+
+<title>Register</title>
+
+
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    <h1>Register</h1>
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.firstName) }}
+        {{ form_row(registrationForm.lastName) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.password.first, {
+            label: 'Password'
+        }) }}
+        {{ form_row(registrationForm.password.second, {
+            label: 'Password'
+        }) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button type="submit" class="btn">Register</button>
+    {{ form_end(registrationForm) }} #}
