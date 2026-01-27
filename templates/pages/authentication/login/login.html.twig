@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Connexion | Médecine du Monde - Blog santé du Dr Jean Dupont</title>
+
+        {# Seo #}
+        <meta name="robots" content="index, follow">
+        <meta name="description" content="Connectez-vous à votre compte Médecine du Monde pour accéder aux articles santé du Dr Jean Dupont, suivre l'actualité médicale et participer aux échanges autour de la prévention et du bien-être.">        <meta name="keywords" content="inscription blog santé, compte utilisateur santé, blog médical inscription, médecine du monde inscription">
+        <meta name="keywords" content="connexion blog santé, connexion compte médical, accès espace membre santé, blog médecine connexion, Médecine du Monde connexion, Dr Jean Dupont">
+        <meta name="author" content="Dwwm22">
+        <meta name="publisher" content="Dwwm22">
+
+        {# Webpack Encore #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+
+        {# Favicon #}
+        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+        <link rel="shortcut icon" href="/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="manifest" href="/site.webmanifest">
+
+        {# Google Font #}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">        
+    </head>
+    <body class="jd-auth-bg">
+        <main>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <img class="img-fluid" src="/images/static/authentication.png" alt="Docteur Jean Dupont vous invite à vous connecter">
+                    </div>
+                    <div class="col-lg-6 d-flex flex-column justify-content-center align-items-center">
+                        <h1 class="text-center my-3">Connexion</h1>
+
+                        <form method="post" class="w-75">
+                            {% if error %}
+                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                            {% endif %}
+
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success text-center" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+
+                            <div class="mb-3">
+                                <label for="inputEmail">Email</label>
+                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputPassword">Mot de passe</label>
+                                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+                            <div class="row mb-3">
+                                <div class="col-md-6 my-1">
+                                    <label>
+                                        <input type="checkbox" name="_remember_me"> Se souvenir de moi
+                                    </label>
+                                </div>
+                                <div class="col-md-6 text-md-end my-1">
+                                    <a href="">Mot de passe oublié?</a>
+                                </div>
+                            </div>
+
+                            <button formnovalidate class="btn btn-primary shadow w-100" type="submit">Se connecter</button>
+                        </form>
+
+                        <div class="d-flex flex-column justify-content-center align-items-center my-4">
+                            <p>Vous n'êtes pas encore inscrit? <a href="{{path('app_register')}}">Inscrivez-vous</a></p>
+                            <p><a href="{{path('app_visitor_welcome')}}">Retour à l'accueil</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
