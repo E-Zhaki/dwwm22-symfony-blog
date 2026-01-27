@@ -33,21 +33,21 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">        
     </head>
-    <body>
+    <body class="jd-auth-bg">
         <main>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
                         <img class="img-fluid" src="/images/static/doctor-jean-dupont-inscription.png" alt="Docteur Jean Dupont vous invite à vous inscrire">
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 d-flex flex-column justify-content-center align-items-center">
                         <h1 class="text-center my-3">Inscription</h1>
 
                         {% for flash_error in app.flashes('verify_email_error') %}
                             <div class="alert alert-danger text-center" role="alert">{{ flash_error }}</div>
                         {% endfor %}
 
-                        {{form_start(registrationForm)}}
+                        {{form_start(registrationForm, {'attr': {'class':'w-75'}})}}
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-3">
@@ -275,7 +275,7 @@
                         {{form_end(registrationForm)}}
 
                         <div class="d-flex flex-column justify-content-center align-items-center my-4">
-                            <p>Vous avez déjà un compte? <a href="">Connectez-vous</a></p>
+                            <p>Vous avez déjà un compte? <a href="{{path('app_login')}}">Connectez-vous</a></p>
                             <p><a href="{{path('app_visitor_welcome')}}">Retour à l'accueil</a></p>
                         </div>
                     </div>
