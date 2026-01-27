@@ -23,69 +23,102 @@ class RegistrationController extends AbstractController
     {
     }
 
+        // INSCRIPTION
     #[Route('/inscription', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+
+        // $request -----------------------OBJET QUI REPRESENTE LA REQUETE ( RECUPERE LES DONNEES DU FORMULAIRE)
+        // $userPasswordHasher-------------OUTIL POUR CHIFFRER (SECURISE LE MOT DE PASSE)
+        // $entityManager-------------------GESTIONNAIRE DE BASE DE DONNEES (ENREGISTRER MODIFIER SUPPRIMER EN BASE DE DONNEE)
     {
-        $user = new User(); //1
-        $form = $this->createForm(RegistrationFormType::class, $user); //2
-        $form->handleRequest($request);
+        $user = new User(); // 1. CREATION UTILISATEUR VIDE QUE LE FORMULAIRE VA REMPLIR
+        $form = $this->createForm(RegistrationFormType::class, $user); // 2. CREATION FORMULAIRE AVEC LA STRUCTURE REGISTRATION FORM DONT LES DONNEES VONT REMPLIR USER
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('password')->getData();
+        $form->handleRequest($request); // 3. RECUPERE LA REQUETE HTTP
 
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+        if ($form->isSubmitted() && $form->isValid()) { // 4. SI BOUTON EST CLIQUEZ ET QUE TOUS EST VALIDE ALORS...
+            /** @var string $password */
+            $password = $form->get('password')->getData(); // RECUPERE LE MOT DE PASSE TAPER PAR LUTILISATEUR
 
+            // hashPassword transforme le mot de passe en version sécurisé
+            $passwordHashed = $userPasswordHasher->hashPassword($user, $password);
+            $user->setPassword($passwordHashed);
+
+            // ---------$user contient : email, prénom, nom, mot de passe chiffré
+            // ---------L'utilisateur est pret a etre enregistré en base de données
+
+            // Champs ajouter par le back
+            $user->setRoles(['ROLE_USER']);
+            $user->setCreatedAt(new \DateTimeImmutable());
+            $user->setUpdatedAt(new \DateTimeImmutable());
+
+            // Prépare la sauvegarde
             $entityManager->persist($user);
+            // Execute en BDD
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('medecine-du-monde@gmail.com', 'Jean Dupont'))
-                    ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            // EMAIL DE CONFIRMATION (LIEN)
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email', // Route vers laquelle le lien pointera
+                $user, // genere un lien avec id=
+                (new TemplatedEmail()) // email basé sur un template twig
+
+                ->from(new Address('medecine-du-monde@gmail.com', 'Jean Dupont'))
+                ->to((string) $user->getEmail())
+                ->subject('Confirmation de votre compte sur le blog de Jean Dupont')
+                ->htmlTemplate('emails/confirmation_email.html.twig') // le contenu de l'email est ici
             );
 
-            // do anything else you need here, like send an email
-
-            return $this->redirectToRoute('app_visitor_welcome');
+            return $this->redirectToRoute('app_visitor_waiting_for_email_verif'); // Aprés inscription il reste en attente de confirmation
         }
+
         // 3.
         return $this->render('pages/authentication/registration/register.html.twig', [
             'registrationForm' => $form,
         ]);
     }
 
+        // INSCRIPTION EN ATTENTE AFFICHE EMAIL VA VERIFIER TON MAIL
+        #[Route('/inscription/en-attente-de-la-verification-de-compte-par-email', name: 'app_visitor_waiting_for_email_verif', methods: ['GET'])]
+            public function waitingForEmailVerif(): Response
+            {
+                return $this->render('pages/authentication/registration/waiting_for_email_verif.html.twig');
+            }
+
+
+
+
+        // VERIFICATION EMAIL RECUPERE ID DANS URL RETROUVE L UTILISATEUR VERIFIE LE LIEN SIGNE PUIS REDIRIGE
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
-    {
-        $id = $request->query->get('id');
+        public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
+        {
+            $id = $request->query->get('id');
 
-        if (null === $id) {
-            return $this->redirectToRoute('app_register');
+            if (null === $id) {
+                return $this->redirectToRoute('app_register');
+            }
+
+            /**
+             * @var User
+             */
+            $user = $userRepository->find($id);
+
+            if (null == $user) {
+                return $this->redirectToRoute('app_register');
+            }
+
+            // validate email confirmation link, sets User::isVerified=true and persists
+            try {
+                $this->emailVerifier->handleEmailConfirmation($request, $user);
+            } catch (VerifyEmailExceptionInterface $exception) {
+                $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
+
+                return $this->redirectToRoute('app_register');
+            }
+
+            // @TODO Change the redirect on success and handle or remove the flash message in your templates
+            $this->addFlash('success', 'Votre compte a bien été vérifié, vous pouvez vous connecter.');
+
+            return $this->redirectToRoute('app_visitor_welcome');
         }
-
-        $user = $userRepository->find($id);
-
-        if (null === $user) {
-            return $this->redirectToRoute('app_register');
-        }
-
-        // validate email confirmation link, sets User::isVerified=true and persists
-        try {
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-
-            return $this->redirectToRoute('app_register');
-        }
-
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
-
-        return $this->redirectToRoute('app_register');
     }
-}
