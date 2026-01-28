@@ -23,19 +23,18 @@ class RegistrationController extends AbstractController
     {
     }
 
-    #[Route('/inscription', name: 'app_register')] 
+    #[Route('/inscription', name: 'app_register')]
     // URL : quand on va sur /inscription, cette méthode est appelée
     public function register(
-        Request $request, 
+        Request $request,
         // Objet qui représente la requête HTTP (données du formulaire, méthode POST, etc.)
 
-        UserPasswordHasherInterface $userPasswordHasher, 
+        UserPasswordHasherInterface $userPasswordHasher,
         // Service Symfony pour chiffrer (hasher) le mot de passe
 
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
         // Service Doctrine pour communiquer avec la base de données
-    ): Response
-    {
+    ): Response {
         // Si un utilisateur est déjà connecté
         if ($this->getUser()) {
             // On l'empêche d'accéder à l'inscription
@@ -43,18 +42,17 @@ class RegistrationController extends AbstractController
         }
 
         // Création d'un objet User vide (futur utilisateur)
-        $user = new User(); 
+        $user = new User();
 
         // Création du formulaire basé sur RegistrationFormType
         // Les données du formulaire seront automatiquement mises dans $user
-        $form = $this->createForm(RegistrationFormType::class, $user); 
+        $form = $this->createForm(RegistrationFormType::class, $user);
 
         // On lie la requête HTTP au formulaire (récupère les données envoyées)
         $form->handleRequest($request);
 
         // Si le formulaire a été envoyé ET que toutes les validations sont correctes
         if ($form->isSubmitted() && $form->isValid()) {
-
             // On récupère le mot de passe en clair saisi par l'utilisateur
             /** @var string $password */
             $password = $form->get('password')->getData();
@@ -86,17 +84,17 @@ class RegistrationController extends AbstractController
                 'app_verify_email', // Route appelée quand l'utilisateur cliquera sur le lien
                 $user,              // Utilisateur concerné
                 (new TemplatedEmail()) // Création de l'email basé sur un template Twig
-                    ->from(new Address('medecine-du-monde@gmail.com', 'Jean Dupont')) 
+                    ->from(new Address('medecine-du-monde@gmail.com', 'Jean Dupont'))
                     // Adresse de l'expéditeur
 
-                    ->to((string) $user->getEmail()) 
+                    ->to((string) $user->getEmail())
                     // Adresse email de l'utilisateur
 
-                    ->subject('Confirmation de votre compte sur le blog de Jean Dupont') 
+                    ->subject('Confirmation de votre compte sur le blog de Jean Dupont')
                     // Sujet du mail
 
-                    ->htmlTemplate('emails/confirmation_email.html.twig') 
-                    // Template HTML utilisé pour construire le mail
+                    ->htmlTemplate('emails/confirmation_email.html.twig')
+                // Template HTML utilisé pour construire le mail
             );
 
             // Après l'inscription, on redirige vers la page "Va vérifier ton email"
@@ -109,7 +107,6 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form,
         ]);
     }
-
 
     // Route affichée après l'inscription, quand on dit à l'utilisateur d'aller vérifier son email
     #[Route(
@@ -129,15 +126,13 @@ class RegistrationController extends AbstractController
         );
     }
 
-
     // Route appelée quand l'utilisateur clique sur le lien reçu par email
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(
         Request $request,                     // Permet de lire les données de l'URL (ex: ?id=123)
         TranslatorInterface $translator,       // Sert à traduire les messages d'erreur
-        UserRepository $userRepository         // Sert à récupérer un utilisateur depuis la base de données
-    ): Response
-    {
+        UserRepository $userRepository,         // Sert à récupérer un utilisateur depuis la base de données
+    ): Response {
         // 1️⃣ On récupère l'id de l'utilisateur depuis l'URL
         // Exemple : /verify/email?id=5
         $id = $request->query->get('id');
@@ -168,7 +163,6 @@ class RegistrationController extends AbstractController
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
-
             // Si le lien est invalide ou expiré :
             // on affiche un message d'erreur
             $this->addFlash(
@@ -194,5 +188,4 @@ class RegistrationController extends AbstractController
         // Puis on redirige vers la page de connexion
         return $this->redirectToRoute('app_login');
     }
-
 }
