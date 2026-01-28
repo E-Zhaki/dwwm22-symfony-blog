@@ -35,7 +35,6 @@ class RegistrationFormType extends AbstractType // ✅ Une classe "FormType" : e
             // - un champ "confirm_password" (en interne)
             // et vérifie qu'ils sont identiques
             ->add('password', RepeatedType::class, [
-
                 // Chaque champ répété sera de type PasswordType (input type="password")
                 'type' => PasswordType::class,
 
@@ -51,7 +50,6 @@ class RegistrationFormType extends AbstractType // ✅ Une classe "FormType" : e
 
             // ✅ Case à cocher : "j'accepte les CGU"
             ->add('agreeTerms', CheckboxType::class, [
-
                 // mapped = false => ce champ N'EST PAS lié à une propriété dans User
                 // Donc : rien n'est enregistré en base de données pour ce champ
                 'mapped' => false,
@@ -77,4 +75,3 @@ class RegistrationFormType extends AbstractType // ✅ Une classe "FormType" : e
         ]);
     }
 }
-

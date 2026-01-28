@@ -8,3 +8,4 @@ parameters:
         - '#Property App\\Entity\\User::\$id \(int\|null\) is never assigned int so it can be removed from the property type#'
         - '#Method App\\Kernel::__construct\(\) with return type void returns null but should not return anything\.#'
         - '#Result of method Symfony\\Component\\HttpKernel\\Kernel::__construct\(\) \(void\) is used.#'
+        - '#Property App\\Entity\\ResetPasswordRequest::\$id \(int\|null\) is never assigned int so it can be removed from the property type#'

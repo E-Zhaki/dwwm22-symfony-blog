@@ -1,0 +1,43 @@
+{% extends 'themes/base_visitor.html.twig' %}
+
+{% block title %}
+Réinitialisation du mot de passe
+{% endblock %}
+
+
+{% block description %}
+Définissez un nouveau mot de passe pour sécuriser votre compte. Choisissez un mot de passe fort afin de protéger votre accès.
+{% endblock %}
+
+
+{% block keywords %}
+réinitialisation mot de passe, nouveau mot de passe, sécurité compte, changement mot de passe, accès sécurisé
+{% endblock %}
+
+{% block main %}
+
+    <h1 class="text-center display-5 my-3">Réinitialisez votre mot de passe</h1>
+
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-6 col-lg-4 mx-auto">
+
+                {{ form_start(resetForm) }}
+                    <div class="mb-3">
+                        <label for="change_password_form_plainPassword_first">Nouveau mot de passe</label>
+                        <div class="text-danger">{{form_errors(resetForm.plainPassword.first)}}</div>
+                        {{form_widget(resetForm.plainPassword.first, {'attr': {'class':'form-control', 'placeholder': 'Au moins 12 caractères', 'autofocus':'autofocus'}})}}
+                        <small>Au moins une lettre minuscule, majuscule, un chiffre et un caractère spécial.</small>                    </div>
+                    <div class="mb-3">
+                        <label for="change_password_form_plainPassword_second">Confirmation du nouveau mot de passe</label>
+                        <div class="text-danger">{{form_errors(resetForm.plainPassword.second)}}</div>
+                        {{ form_widget(resetForm.plainPassword.second, {'attr': {'class':'form-control'}}) }}
+                    </div>
+                    <div>
+                        <button formnovalidate class="btn btn-primary w-100 shadow">Réinitialiser</button>
+                    </div>
+                {{ form_end(resetForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
