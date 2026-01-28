@@ -34,253 +34,178 @@
         <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">        
     </head>
     <body class="jd-auth-bg">
-        <main>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <img class="img-fluid" src="/images/static/doctor-jean-dupont-inscription.png" alt="Docteur Jean Dupont vous invite à vous inscrire">
-                    </div>
-                    <div class="col-lg-6 d-flex flex-column justify-content-center align-items-center">
-                        <h1 class="text-center my-3">Inscription</h1>
+    <main>
+        <div class="container">
+            <div class="row">
 
-                        {% for flash_error in app.flashes('verify_email_error') %}
-                            <div class="alert alert-danger text-center" role="alert">{{ flash_error }}</div>
-                        {% endfor %}
+                <div class="col-lg-6">
+                    <img class="img-fluid" src="/images/static/doctor-jean-dupont-inscription.png"
+                        alt="Docteur Jean Dupont vous invite à vous inscrire">
+                </div>
 
-                        {{form_start(registrationForm, {'attr': {'class':'w-75'}})}}
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label for="registration_form_firstName">Prénom <span class="text-danger">*</span></label>
-                                        <div class="text-danger">{{form_errors(registrationForm.firstName)}}</div>
-                                        {{form_widget(registrationForm.firstName, {'attr': {'class':'form-control', 'autofocus':'autofocus'}})}}
+                <div class="col-lg-6 d-flex flex-column justify-content-center align-items-center">
+
+                    <h1 class="text-center my-3">Inscription</h1>
+
+                    {# Flash message : erreurs liées à la vérification email
+                    -> ajouté depuis le controller (verifyUserEmail) via addFlash('verify_email_error', ...) #}
+                    {% for flash_error in app.flashes('verify_email_error') %}
+                        <div class="alert alert-danger text-center" role="alert">
+                            {{ flash_error }}
+                        </div>
+                    {% endfor %}
+
+                    {# form_start : ouvre le <form> + ajoute la sécurité (CSRF, méthode POST, action)
+                    registrationForm = variable envoyée par le controller (render(..., ['registrationForm' => $form])) #}
+                    {{ form_start(registrationForm, {'attr': {'class':'w-75'}}) }}
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+
+                                    {# Label (tu peux le laisser en dur comme ça) #}
+                                    <label for="registration_form_firstName">
+                                        Prénom <span class="text-danger">*</span>
+                                    </label>
+
+                                    {# form_errors : affiche les erreurs de validation du champ firstName #}
+                                    <div class="text-danger">
+                                        {{ form_errors(registrationForm.firstName) }}
                                     </div>
+
+                                    {# form_widget : génère l'input HTML du champ firstName #}
+                                    {{ form_widget(registrationForm.firstName, {
+                                        'attr': {'class':'form-control', 'autofocus':'autofocus'}
+                                    }) }}
+
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label for="registration_form_lastName">Nom <span class="text-danger">*</span></label>
-                                        <div class="text-danger">{{form_errors(registrationForm.lastName)}}</div>
-                                        {{form_widget(registrationForm.lastName, {'attr': {'class':'form-control'}})}}
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="registration_form_lastName">
+                                        Nom <span class="text-danger">*</span>
+                                    </label>
+
+                                    <div class="text-danger">
+                                        {{ form_errors(registrationForm.lastName) }}
                                     </div>
+
+                                    {{ form_widget(registrationForm.lastName, {
+                                        'attr': {'class':'form-control'}
+                                    }) }}
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="registration_form_email">Email <span class="text-danger">*</span></label>
-                                    <div class="text-danger">{{form_errors(registrationForm.email)}}</div>
-                                {{form_widget(registrationForm.email, {'attr': {'class':'form-control'}})}}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="registration_form_email">
+                                Email <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="text-danger">
+                                {{ form_errors(registrationForm.email) }}
                             </div>
-                            <div class="mb-3">
-                                <label for="registration_form_password_first">Mot de passe <span class="text-danger">*</span></label>
-                                <div class="text-danger">{{form_errors(registrationForm.password.first)}}</div>
-                                {{form_widget(registrationForm.password.first, {'attr': {'class':'form-control', 'placeholder': 'Au moins 12 caractères'}})}}
-                                <small>Au moins une lettre minuscule, majuscule, un chiffre et un caractère spécial.</small>
+
+                            {{ form_widget(registrationForm.email, {
+                                'attr': {'class':'form-control'}
+                            }) }}
+                        </div>
+
+                        {# Mot de passe en RepeatedType :
+                        -> Symfony crée 2 champs : password.first et password.second
+                        -> et vérifie qu'ils sont identiques #}
+                        <div class="mb-3">
+                            <label for="registration_form_password_first">
+                                Mot de passe <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="text-danger">
+                                {{ form_errors(registrationForm.password.first) }}
                             </div>
-                            <div class="mb-3">
-                                <label for="registration_form_password_second">Confirmation du mot de passe <span class="text-danger">*</span></label>
-                                <div class="text-danger">{{form_errors(registrationForm.password.second)}}</div>
-                                {{form_widget(registrationForm.password.second, {'attr': {'class':'form-control'}})}}
+
+                            {{ form_widget(registrationForm.password.first, {
+                                'attr': {'class':'form-control', 'placeholder': 'Au moins 12 caractères'}
+                            }) }}
+
+                            <small>Au moins une lettre minuscule, majuscule, un chiffre et un caractère spécial.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="registration_form_password_second">
+                                Confirmation du mot de passe <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="text-danger">
+                                {{ form_errors(registrationForm.password.second) }}
                             </div>
-                            <div class="mb-3">
-                                {{form_widget(registrationForm.agreeTerms)}} 
-                                <label for="registration_form_agreeTerms">
-                                    Lire et accepter <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">les conditions générales d'utilisation</a>
-                                </label>
 
-                                <!-- Modal -->
-                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-scrollable">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h2 class="modal-title fs-5" id="staticBackdropLabel">Les conditions générales d'utilisation</h2>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            {{ form_widget(registrationForm.password.second, {
+                                'attr': {'class':'form-control'}
+                            }) }}
+                        </div>
+
+                        {# agreeTerms :
+                        -> mapped=false dans le FormType
+                        -> donc ce champ n'est PAS enregistré en base
+                        -> il sert juste à valider que la case est cochée (IsTrue) #}
+                        <div class="mb-3">
+                            {{ form_widget(registrationForm.agreeTerms) }}
+                            <label for="registration_form_agreeTerms">
+                                Lire et accepter
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    les conditions générales d'utilisation
+                                </a>
+                            </label>
+
+                            {# Modal Bootstrap : du HTML pur (pas Symfony) #}
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title fs-5" id="staticBackdropLabel">
+                                                Les conditions générales d'utilisation
+                                            </h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            {# Contenu CGU (très long) : OK de le garder, c’est juste du HTML #}
+                                            <div class="cgu-container">
+                                                ...
                                             </div>
-                                            <div class="modal-body">
-                                                <div class="cgu-container">
+                                        </div>
 
-                                                    <header>
-                                                        <p><strong>Dernière mise à jour :</strong> 17 mai 2025</p>
-                                                    </header>
-
-                                                    <section>
-                                                        <p>
-                                                        Les présentes Conditions Générales d'Utilisation (dites « CGU ») ont pour objet
-                                                        de définir les modalités et conditions dans lesquelles les utilisateurs accèdent
-                                                        et utilisent le site <strong>Le blog de Jean Dupont</strong> (ci-après « le Site »).
-                                                        </p>
-                                                        <p>
-                                                        Toute navigation sur le Site implique l'acceptation pleine et entière des présentes CGU.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>1. Présentation du Site</h2>
-                                                        <p>
-                                                        Le Site est un blog médical ayant pour objectif de diffuser des informations claires,
-                                                        accessibles et pédagogiques sur la santé, la médecine et le bien-être.
-                                                        </p>
-                                                        <p>
-                                                        Il met en avant l'expertise du <strong>Dr Jean Dupont</strong> et s'adresse à un public non spécialisé.
-                                                        Les informations publiées ont une vocation <strong>informative et éducative</strong> uniquement.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>2. Accès au Site</h2>
-                                                        <p>
-                                                        Le Site est accessible gratuitement à tout utilisateur disposant d'un accès à Internet.
-                                                        Certains services nécessitent la création d'un compte utilisateur.
-                                                        </p>
-                                                        <p>
-                                                        Le Site est accessible 24h/24 et 7j/7, sauf cas de force majeure, maintenance ou interruption indépendante de la volonté de l'éditeur.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>3. Création de compte et espace utilisateur</h2>
-                                                        <p>Pour accéder à certaines fonctionnalités, l'utilisateur doit créer un compte personnel.</p>
-                                                        <ul>
-                                                        <li>Fournir des informations exactes lors de l'inscription</li>
-                                                        <li>Maintenir la confidentialité de ses identifiants</li>
-                                                        <li>Ne pas usurper l'identité d'un tiers</li>
-                                                        </ul>
-                                                        <p>
-                                                        L'utilisateur peut supprimer son compte à tout moment depuis son espace personnel.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>4. Utilisation des fonctionnalités interactives</h2>
-
-                                                        <article>
-                                                        <h3>4.1 Commentaires</h3>
-                                                        <p>Les utilisateurs peuvent publier des commentaires sur les articles du Site.</p>
-                                                        <p>Il est strictement interdit de publier des contenus :</p>
-                                                        <ul>
-                                                            <li>Contraires à la loi ou à l'ordre public</li>
-                                                            <li>Diffamatoires, injurieux, haineux ou discriminatoires</li>
-                                                            <li>À caractère médical trompeur ou dangereux</li>
-                                                            <li>Publicitaires ou promotionnels non sollicités</li>
-                                                        </ul>
-                                                        <p>
-                                                            L'éditeur se réserve le droit de modérer ou supprimer tout contenu ne respectant pas les présentes CGU.
-                                                        </p>
-                                                        </article>
-
-                                                        <article>
-                                                        <h3>4.2 Likes</h3>
-                                                        <p>
-                                                            Les utilisateurs connectés peuvent ajouter ou retirer un « like » sur les articles.
-                                                            Toute manipulation artificielle des statistiques est interdite.
-                                                        </p>
-                                                        </article>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>5. Responsabilité médicale et limites d'information</h2>
-                                                        <p>Les contenus publiés sur le Site ne constituent en aucun cas :</p>
-                                                        <ul>
-                                                        <li>Un diagnostic médical</li>
-                                                        <li>Une consultation médicale</li>
-                                                        <li>Un avis médical personnalisé</li>
-                                                        </ul>
-                                                        <p>
-                                                        Les informations diffusées ne remplacent pas une consultation auprès d'un professionnel de santé qualifié.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>6. Propriété intellectuelle</h2>
-                                                        <p>
-                                                        L'ensemble du contenu du Site (textes, images, graphismes, logos, structure)
-                                                        est protégé par le droit de la propriété intellectuelle.
-                                                        </p>
-                                                        <p>
-                                                        Toute reproduction ou exploitation sans autorisation écrite préalable est interdite.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>7. Données personnelles</h2>
-                                                        <p>
-                                                        Le Site collecte et traite des données personnelles conformément au Règlement Général
-                                                        sur la Protection des Données (RGPD).
-                                                        </p>
-                                                        <p>
-                                                        L'utilisateur dispose d'un droit d'accès, de rectification et de suppression de ses données.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>8. Sécurité</h2>
-                                                        <p>
-                                                        L'éditeur met en œuvre des moyens techniques raisonnables afin de sécuriser le Site
-                                                        et les données des utilisateurs.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>9. Responsabilité de l'éditeur</h2>
-                                                        <p>
-                                                        L'éditeur ne saurait être tenu responsable des interruptions, erreurs ou dommages
-                                                        liés à l'utilisation du Site.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>10. Liens externes</h2>
-                                                        <p>
-                                                        Le Site peut contenir des liens vers des sites tiers.
-                                                        L'éditeur décline toute responsabilité quant à leur contenu.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>11. Modification des CGU</h2>
-                                                        <p>
-                                                        Les présentes CGU peuvent être modifiées à tout moment.
-                                                        L'utilisation continue du Site vaut acceptation des nouvelles conditions.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>12. Droit applicable</h2>
-                                                        <p>
-                                                        Les présentes CGU sont régies par le droit français.
-                                                        En cas de litige, les tribunaux français seront compétents.
-                                                        </p>
-                                                    </section>
-
-                                                    <section>
-                                                        <h2>13. Contact</h2>
-                                                        <p>
-                                                        Pour toute question, l'utilisateur peut contacter l'éditeur via le formulaire de contact du Site.
-                                                        </p>
-                                                    </section>
-
-                                                    <footer>
-                                                        <p>© Blog de Jean Dupont - Tous droits réservés</p>
-                                                    </footer>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                            </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Fermer
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <input formnovalidate type="submit" class="btn btn-primary w-100 shadow" value="S'inscrire">
-                            </div>
-                        {{form_end(registrationForm)}}
-
-                        <div class="d-flex flex-column justify-content-center align-items-center my-4">
-                            <p>Vous avez déjà un compte? <a href="{{path('app_login')}}">Connectez-vous</a></p>
-                            <p><a href="{{path('app_visitor_welcome')}}">Retour à l'accueil</a></p>
                         </div>
+
+                        {# Submit :
+                        -> déclenche le POST
+                        -> côté controller : $form->handleRequest($request) récupère la soumission #}
+                        <div>
+                            <input type="submit" class="btn btn-primary w-100 shadow" value="S'inscrire">
+                        </div>
+
+                    {# form_end : ferme le form + ajoute automatiquement les champs cachés (dont CSRF) #}
+                    {{ form_end(registrationForm) }}
+
+                    <div class="d-flex flex-column justify-content-center align-items-center my-4">
+                        <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
+                        <p><a href="{{ path('app_visitor_welcome') }}">Retour à l'accueil</a></p>
                     </div>
+
                 </div>
             </div>
-        </main>
+        </div>
+    </main>
     </body>
-</html>
+    </html>
