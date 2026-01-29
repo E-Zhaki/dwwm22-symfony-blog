@@ -3,17 +3,16 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}{% endblock %} · Blog santé du Dr Jean Dupont</title>
+        <title>{% block title %}{% endblock %} · Espace privé · Blog santé du Dr Jean Dupont</title>
 
         {# Seo #}
-        <meta name="robots" content="index, follow">
+        {# <meta name="robots" content="index, follow"> #}
         <meta name="description" content="{% block description %}{% endblock %}">
         <meta name="keywords" content="{% block keywords %}{% endblock %}">
         <meta name="author" content="Dwwm22">
         <meta name="publisher" content="Dwwm22">
         <meta name="theme-color" content="#712cf9">
         
-
         {# Webpack Encore #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -39,52 +38,31 @@
     <body class="body-visitor">
         
         {# Navbar #}
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{path('app_visitor_welcome')}}">JD</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{path('app_visitor_welcome')}}">Accueil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{path('app_visitor_welcome')}}#about-me">Qui suis-je?</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{path('app_visitor_blog_index')}}">Blog</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{path('app_visitor_contact_index')}}">Contact</a>
-                        </li>
-                    </ul>
                     <ul class="navbar-nav ms-auto">
-                        {% if app.user %}
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <li class="nav-item">
-                                    <a href="{{path('app_admin_home')}}" class="nav-link">Espace admin</a>
-                                </li>                            
-                            {% endif %}
-
-                            {% if is_granted('ROLE_USER') %}
-                                <li class="nav-item">
-                                    <a href="{{path('app_user_home')}}" class="nav-link">Espace privé</a>
-                                </li>
-                            {% endif %}
-                            
-                            <li class="nav-item">
-                                <a href="{{path('app_logout')}}" class="nav-link">Déconnexion</a>
-                            </li>
-                        {% else %}
                         <li class="nav-item">
-                            <a href="{{path('app_login')}}" class="nav-link">Connexion</a>
+                            <a class="nav-link active" aria-current="page" href="{{path('app_user_home')}}">Tableau de bord</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{path('app_register')}}" class="nav-link">Inscription</a>
+                            <a class="nav-link" href="#">Mon profil</a>
+                        </li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('app_admin_home')}}">Espace admin</a>
                         </li>
                         {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('app_visitor_welcome')}}">Retour au site</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('app_logout')}}">Déconnexion</a>
+                        </li>
                     </ul>
                 </div>
             </div>
