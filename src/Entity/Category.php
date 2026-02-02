@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -24,6 +25,7 @@ class Category
     #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
+    #[Gedmo\Slug(fields: ['name'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
