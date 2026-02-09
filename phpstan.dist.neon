@@ -10,3 +10,5 @@ parameters:
         - '#Result of method Symfony\\Component\\HttpKernel\\Kernel::__construct\(\) \(void\) is used.#'
         - '#Property App\\Entity\\ResetPasswordRequest::\$id \(int\|null\) is never assigned int so it can be removed from the property type#'
         - '#Property App\\Entity\\Category::\$id \(int\|null\) is never assigned int so it can be removed from the property type#'
+        - '#Property App\\Entity\\Post::\$id \(int\|null\) is never assigned int so it can be removed from the property type#'
+        - '#Property App\\Entity\\Post::\$isPublished \(bool\|null\) is never assigned null so it can be removed from the property type#'
