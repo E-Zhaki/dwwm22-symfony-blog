@@ -29,6 +29,8 @@
 {% block main %}
     <h1 class="text-center my-3 display-5">Liste des catégories</h1>
 
+    {% include 'components/alert.html.twig' %}
+
     <div class="d-flex justify-content-end align-items-center my-3">
         <a href="{{path('app_admin_category_create')}}" class="btn btn-primary shadow"><i class="fa-solid fa-plus"></i> Nouvelle catégorie</a>
     </div>
@@ -52,7 +54,7 @@
                         <td>{{category.createdAt|format_date()}}</td>
                         <td>{{category.updatedAt|format_date()}}</td>
                         <td>
-                            <a href="" class="btn btn-sm btn-secondary"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+                            <a href="{{path('app_admin_category_edit', {'id':category.id})}}" class="btn btn-sm btn-secondary"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
                             <a href="" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</a>
                         </td>
                     </tr>
