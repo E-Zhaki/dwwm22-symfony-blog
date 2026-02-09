@@ -49,7 +49,7 @@ final class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/category/{id<\d+>}/edit}', name: 'app_admin_category_edit', methods: ['GET', 'POST'])]
+    #[Route('/category/{id<\d+>}/edit', name: 'app_admin_category_edit', methods: ['GET', 'POST'])]
     public function edit(Category $category, Request $request, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CategoryFormType::class, $category);
@@ -71,14 +71,14 @@ final class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/category/{id<\d+>}/delete}', name: 'app_admin_category_delete', methods: ['POST'])]
+    #[Route('/category/{id<\d+>}/delete', name: 'app_admin_category_delete', methods: ['POST'])]
     public function delete(Category $category, Request $request, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid("category-{$category->getId()}", $request->request->get('csrf_token'))) {
             $entityManager->remove($category);
             $entityManager->flush();
 
-            $this->addFlash('success', 'La catégorie a été modifiée');
+            $this->addFlash('success', 'La catégorie a été supprimée');
         }
 
         return $this->redirectToRoute('app_admin_category_index');
