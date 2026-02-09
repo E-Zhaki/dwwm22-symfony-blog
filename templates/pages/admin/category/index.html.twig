@@ -53,9 +53,12 @@
                         <td>{{category.slug}}</td>
                         <td>{{category.createdAt|format_date()}}</td>
                         <td>{{category.updatedAt|format_date()}}</td>
-                        <td>
+                        <td class="d-flex justify-content-center align-items-center gap-1 ">
                             <a href="{{path('app_admin_category_edit', {'id':category.id})}}" class="btn btn-sm btn-secondary"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
-                            <a href="" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</a>
+                            <form action="{{path('app_admin_category_delete', {'id':category.id})}}" method="post">
+                                <input type="hidden" name="csrf_token" value="{{csrf_token('category-'~category.id)}}">
+                                <button onclick=" return confirm('Confirmer la suppression?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}
