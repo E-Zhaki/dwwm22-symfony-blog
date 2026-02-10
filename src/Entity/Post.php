@@ -5,7 +5,9 @@ namespace App\Entity;
 use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Attribute as Vich;
 
 #[Vich\Uploadable]
@@ -20,32 +22,58 @@ class Post
     #[ORM\ManyToOne(inversedBy: 'posts')]
     private ?User $user = null;
 
+    #[Assert\NotBlank(message: 'La catégorie est obligatoire.')]
+    #[Assert\Type(
+        type: Category::class,
+        message: "La catégorie {{ value }} n'existe pas.",
+    )]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[Assert\NotBlank(message: 'Le titre est obligatoire.')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Le titre ne dois pas dépasser {{ limit }} caractères',
+    )]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Gedmo\Slug(fields: ['title'])]
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[Assert\NotBlank(message: 'La description est obligatoire.')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'La description ne dois pas dépasser {{ limit }} caractères',
+    )]
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Les mots clés ne doivent pas dépasser {{ limit }} caractères',
+    )]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $keywords = null;
 
     #[ORM\Column]
     private ?bool $isPublished = false;
 
-    // NOTE: This is not a mapped field of entity metadata, just a simple property.
+    #[Assert\File(
+        maxSize: '4M',
+        extensions: ['png', 'jpg', 'jpeg', 'webp'],
+        maxSizeMessage: 'Le fichier est trop volumineux ({{ size }} {{ suffix }}). La taille maximale autorisée est de {{ limit }} {{ suffix }}.',
+        extensionsMessage: "Seuls les formats 'png', 'jpg', 'jpeg', 'webp' sont valides.",
+    )]
     #[Vich\UploadableField(mapping: 'posts', fileNameProperty: 'image')]
     private ?File $imageFile = null;
 
     #[ORM\Column(length: 255, nullable: true, unique: true)]
     private ?string $image = null;
 
+    #[Assert\NotBlank(message: 'Le contenu est obligatoire.')]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 

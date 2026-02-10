@@ -21,6 +21,7 @@ class PostFormType extends AbstractType
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
+                'placeholder' => 'Selectionnez la catégorie',
             ])
             ->add('description', TextType::class)
             ->add('keywords', TextType::class)
