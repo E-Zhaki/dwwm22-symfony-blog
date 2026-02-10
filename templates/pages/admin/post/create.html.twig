@@ -1,67 +1,62 @@
 {% extends "themes/base_admin.html.twig" %}
 
-{% block title %}Liste des articles{% endblock %}
+{% block title %}Nouvel article{% endblock %}
 
-{% block description %}Consultez la liste des articles{% endblock %}
+{% block description %}Ajouter un nouvel article à la liste{% endblock %}
 
-{% block keywords %}Consultation, lecture, liste, articles{% endblock %}
+{% block keywords %}Ajouter, nouvel, article{% endblock %}
 
-{% block j_query %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-{% endblock %}
-
-{% block data_tables %}
-    <link href="https://cdn.datatables.net/v/bs5/dt-2.3.7/datatables.min.css" rel="stylesheet" integrity="sha384-MnxpJFHU9dTMYXshJqBDA0d93sG4KKAFEEzynAaDqcPP7BYh11O5HxbJ6iLDWOXS" crossorigin="anonymous">
-    <script src="https://cdn.datatables.net/v/bs5/dt-2.3.7/datatables.min.js" integrity="sha384-7rAjATpiK3MtvKnoDf5WQz4O8W+3kpl4Jm82apgJgNkeUmZ59yjJT6LqlJpYqhVK" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready( function () {
-            $('#myTable').DataTable({
-                language: {
-                    url: 'https://cdn.datatables.net/plug-ins/2.3.7/i18n/fr-FR.json',
-                }
-            });
-        });
-    </script>
+{% block tiny_mce %}
+<script src="https://cdn.tiny.cloud/1/o3g4h9ewqf0ns62ocgn2rfstoilzkv4jrxl4h8a0zsvof83d/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+<script>
+    tinymce.init({
+        selector: 'textarea'
+    });
+</script>
 {% endblock %}
 
 {% block main %}
-    <h1 class="text-center my-3 display-5">Liste des articles</h1>
+    <h1 class="text-center my-3 display-5">Nouvel article</h1>
 
-    {% include 'components/alert.html.twig' %}
-
-    <div class="d-flex justify-content-end align-items-center my-3">
-        <a href="{{path('app_admin_post_create')}}" class="btn btn-primary shadow"><i class="fa-solid fa-plus"></i> Nouvel article</a>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md10 mx-auto bg_light shadow p-4">
+                {{ form_start(postForm) }}
+                    <div class="mb-3">
+                        <label for="post_form_title">Titre: <span class="text-danger">*</span></label>
+                        <div class="text-danger">{{form_errors(postForm.title)}}</div>
+                        {{form_widget(postForm.title, {'attr': {'class':'form-control', 'autofocus':'autofocus'}})}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_category">Categorie <span class="text-danger">*</span></label>
+                        <div class="text-danger">{{form_errors(postForm.category)}}</div>
+                        {{form_widget(postForm.category, {'attr': {'class':'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_description">Description <span class="text-danger">*</span></label>
+                        <div class="text-danger">{{form_errors(postForm.description)}}</div>
+                        {{form_widget(postForm.description, {'attr': {'class':'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_keywords">Mots clés</label>
+                        <div class="text-danger">{{form_errors(postForm.keywords)}}</div>
+                        {{form_widget(postForm.keywords, {'attr': {'class':'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_imageFile">Image</label>
+                        <div class="text-danger">{{form_errors(postForm.imageFile)}}</div>
+                        {{form_widget(postForm.imageFile, {'attr': {'class':'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_content">Contenu <span class="text-danger">*</span></label>
+                        <div class="text-danger">{{form_errors(postForm.content)}}</div>
+                        {{form_widget(postForm.content, {'attr': {'class':'form-control', 'rows': 10}})}}
+                    </div>
+                    <div>
+                        <input formnovalidate type="submit" class="btn btn-primary shadow" value="Sauvegarder">
+                    </div>
+                {{ form_end(postForm) }}
+            </div>
+        </div>
     </div>
-
-    {#
-    <div class="table-responsive">
-        <table id="myTable" class="table table-striped table-hover table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Nom</th>
-                    <th>Slug</th>
-                    <th>Créée le</th>
-                    <th>Modifiée le</th>
-                    <th>Options</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for category in categories %}
-                    <tr>
-                        <td>{{category.name}}</td>
-                        <td>{{category.slug}}</td>
-                        <td>{{category.createdAt|format_date()}}</td>
-                        <td>{{category.updatedAt|format_date()}}</td>
-                        <td class="d-flex justify-content-center align-items-center gap-1">
-                            <a href="{{path('app_admin_category_edit', {'id':category.id})}}" class="btn btn-sm btn-secondary"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
-                            <form action="{{path('app_admin_category_delete', {'id':category.id})}}" method="post">
-                                <input type="hidden" name="csrf_token" value="{{csrf_token('category-'~category.id)}}">
-                                <button onclick="return confirm('Confirmer la suppression?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div> #}
 {% endblock %}
