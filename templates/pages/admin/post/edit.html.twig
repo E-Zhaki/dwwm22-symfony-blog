@@ -1,0 +1,71 @@
+{% extends "themes/base_admin.html.twig" %}
+
+{% block title %}Modifier cet article{% endblock %}
+
+{% block description %}Modifier cet article de la liste{% endblock %}
+
+{% block keywords %}Modifier, article{% endblock %}
+
+{% block tiny_mce %}
+<script src="https://cdn.tiny.cloud/1/vrs8wqxdye5k6lefp89q7h1fuhhd49t3ad0tnjg7dd4qxfj4/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+<script>
+    tinymce.init({
+        selector: 'textarea'
+    });
+</script>
+{% endblock %}
+
+{% block main %}
+    <h1 class="text-center my-3 display-5">Modifier cet article</h1>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-10 mx-auto bg-light shadow p-4">
+                {{ form_start(postForm) }}
+                    <div class="mb-3">
+                        <label for="post_form_title">Titre <span class="text-danger">*</span></label>
+                        <div class="text-danger">{{form_errors(postForm.title)}}</div>
+                        {{form_widget(postForm.title, {'attr': {'class':'form-control', 'autofocus':'autofocus'}})}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_category">Categorie <span class="text-danger">*</span></label>
+                        <div class="text-danger">{{form_errors(postForm.category)}}</div>
+                        {{form_widget(postForm.category, {'attr': {'class':'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_description">Description <span class="text-danger">*</span></label>
+                        <div class="text-danger">{{form_errors(postForm.description)}}</div>
+                        {{form_widget(postForm.description, {'attr': {'class':'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_keywords">Mots clés</label>
+                        <div class="text-danger">{{form_errors(postForm.keywords)}}</div>
+                        {{form_widget(postForm.keywords, {'attr': {'class':'form-control'}})}}
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6 text-center">
+                            {% if post.image %}
+                                <img src="{{ vich_uploader_asset(post, 'imageFile') | imagine_filter('admin_post_thumb') }}" alt="{{ post.title }}">
+                            {% else %}
+                                <p>Aucune image existante</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="post_form_imageFile">Image</label>
+                            <div class="text-danger">{{form_errors(postForm.imageFile)}}</div>
+                            {{form_widget(postForm.imageFile, {'attr': {'class':'form-control'}})}}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_content">Contenu <span class="text-danger">*</span></label>
+                        <div class="text-danger">{{form_errors(postForm.content)}}</div>
+                        {{form_widget(postForm.content, {'attr': {'class':'form-control', 'rows': 10}})}}
+                    </div>
+                    <div>
+                        <input formnovalidate type="submit" class="btn btn-primary shadow" value="Sauvegarder">
+                    </div>
+                {{ form_end(postForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
