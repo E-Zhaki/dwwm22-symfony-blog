@@ -1,0 +1,38 @@
+{% extends "themes/base_admin.html.twig" %}
+
+{% block title %}Consulter les détails de l'article {{post.id}}: {{post.title}}{% endblock %}
+
+{% block description %}Consulter les détails de cet article de la liste{% endblock %}
+
+{% block keywords %}Lire, article, détails{% endblock %}
+
+{% block main %}
+
+    <h1 class="text-center my-3 display-5">Les détails de cet article</h1>
+
+    <div class= "container text-center">
+        {% if post.image %}
+            <img class= "img-fluid" src="{{ vich_uploader_asset(post, 'imageFile') }}" alt="{{ post.title }}">
+        {% endif %}
+
+        <h2 class="text-center my-3 display-6">{{post.title}}</h2>
+
+        <div>
+            <small>{{post.createdAt|format_date()}}</small>
+            <br>
+            <small>{{post.updatedAt|format_date()}}</small>
+            <br>
+            {% if post.publishedAt %}
+                <small>{{post.publishedAt|format_date()}}</small>
+            {% else %}
+                <span>Non publié pour l'instant</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="container mt-5">
+        {{post.content|raw}}
+    </div>
+{% endblock %}
