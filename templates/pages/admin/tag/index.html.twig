@@ -1,0 +1,71 @@
+{% extends "themes/base_admin.html.twig" %}
+
+{% block title %}Liste des tags{% endblock %}
+
+{% block description %}Consultez la liste des tags{% endblock %}
+
+{% block keywords %}Consultation, lecture, liste, tags{% endblock %}
+
+{% block j_query %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block data_tables %}
+<link href="https://cdn.datatables.net/v/bs5/dt-2.3.7/datatables.min.css" rel="stylesheet" integrity="sha384-MnxpJFHU9dTMYXshJqBDA0d93sG4KKAFEEzynAaDqcPP7BYh11O5HxbJ6iLDWOXS" crossorigin="anonymous">
+<script src="https://cdn.datatables.net/v/bs5/dt-2.3.7/datatables.min.js" integrity="sha384-7rAjATpiK3MtvKnoDf5WQz4O8W+3kpl4Jm82apgJgNkeUmZ59yjJT6LqlJpYqhVK" crossorigin="anonymous"></script>
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/2.3.7/i18n/fr-FR.json',
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block main %}
+    <h1 class="text-center my-3 display-5">Liste des tags</h1>
+
+    {% include 'components/alert.html.twig' %}
+
+    <div class="d-flex justify-content-end align-items-center my-3">
+        <a href="{{path('app_admin_tag_create')}}" class="btn btn-primary shadow"><i class="fa-solid fa-plus"></i> Nouveau tag</a>
+    </div>
+
+    <div class="table-responsive">
+        <table id="myTable" class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nom</th>
+                    <th>Slug</th>
+                    <th>Créée le</th>
+                    <th>Modifiée le</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tag in tags %}
+                    <tr>
+                        <td>{{tag.name}}</td>
+                        <td>{{tag.slug}}</td>
+                        <td>{{tag.createdAt|format_date()}}</td>
+                        <td>{{tag.updatedAt|format_date()}}</td>
+                        <td class="d-flex justify-content-center align-items-center gap-1">
+                            {# <a href="{{path('app_admin_tag_edit', {'id':tag.id})}}" class="btn btn-sm btn-secondary"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+                            <form action="{{path('app_admin_tag_delete', {'id':tag.id})}}" method="post">
+                                <input type="hidden" name="csrf_token" value="{{csrf_token('tag-'~tag.id)}}">
+
+                                {% if tag.posts is empty %}
+                                    <button onclick="return confirm('Confirmer la suppression de cette catégorie?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
+                                {% else %}
+                                <button onclick="return confirm('Attention!!! En supprimant cette catégorie, vous supprimerez aussi les articles qui lui sont associés?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
+                                {% endif %}
+                            </form> #}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
