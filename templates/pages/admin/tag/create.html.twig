@@ -1,0 +1,29 @@
+{% extends "themes/base_admin.html.twig" %}
+
+{% block title %}Nouveau tag{% endblock %}
+
+{% block description %}Ajouter une nouveau tag à la liste{% endblock %}
+
+{% block keywords %}Ajouter, nouveau, tag{% endblock %}
+
+{% block main %}
+    <h1 class="text-center my-3 display-5">Nouveau tag</h1>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                {{ form_start(tagForm) }}
+                    <div class="mb-3">
+                        <label for="tag_form_name">Nom: </label>
+                         <div class="text-danger">{{ form_errors(tagForm.name) }}</div>
+                        {{form_widget(tagForm.name, {'attr': {'class':'form-control', 'autofocus':'autofocus'}})}}
+                    </div>
+                    <div>
+                        <input formnovalidate type="submit" class="btn btn-primary shadow" value="Ajouter">
+                    </div>
+                {{ form_end(tagForm) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
