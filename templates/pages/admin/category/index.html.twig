@@ -6,19 +6,17 @@
 
 {% block keywords %}Consultation, lecture, liste, catégories{% endblock %}
 
-
 {% block j_query %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {% endblock %}
 
 {% block data_tables %}
 <link href="https://cdn.datatables.net/v/bs5/dt-2.3.7/datatables.min.css" rel="stylesheet" integrity="sha384-MnxpJFHU9dTMYXshJqBDA0d93sG4KKAFEEzynAaDqcPP7BYh11O5HxbJ6iLDWOXS" crossorigin="anonymous">
-<script src="https://cdn.datatables.net/v/bs5/dt-2.3.7/datatables.min.js" integrity="sha384-7rAjATpiK3MtvKnoDf5WQz4O8W+3kpl4Jm82apgJgNkeUmZ59yjJT6LqlJpYqhVK" crossorigin="anonymous">
-</script>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.3.7/datatables.min.js" integrity="sha384-7rAjATpiK3MtvKnoDf5WQz4O8W+3kpl4Jm82apgJgNkeUmZ59yjJT6LqlJpYqhVK" crossorigin="anonymous"></script>
 <script>
     $(document).ready( function () {
         $('#myTable').DataTable({
-                    language: {
+            language: {
                 url: 'https://cdn.datatables.net/plug-ins/2.3.7/i18n/fr-FR.json',
             }
         });
@@ -53,11 +51,17 @@
                         <td>{{category.slug}}</td>
                         <td>{{category.createdAt|format_date()}}</td>
                         <td>{{category.updatedAt|format_date()}}</td>
-                        <td class="d-flex justify-content-center align-items-center gap-1 ">
+                        <td class="d-flex justify-content-center align-items-center gap-1">
                             <a href="{{path('app_admin_category_edit', {'id':category.id})}}" class="btn btn-sm btn-secondary"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
                             <form action="{{path('app_admin_category_delete', {'id':category.id})}}" method="post">
                                 <input type="hidden" name="csrf_token" value="{{csrf_token('category-'~category.id)}}">
-                                <button onclick=" return confirm('Confirmer la suppression?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
+
+                                {% if category.posts is empty %}
+                                    <button onclick="return confirm('Confirmer la suppression de cette catégorie?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
+                                {% else %}
+                                <button onclick="return confirm('Attention!!! En supprimant cette catégorie, vous supprimerez aussi les articles qui lui sont associés?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
+                                {% endif %}
+                                
                             </form>
                         </td>
                     </tr>
