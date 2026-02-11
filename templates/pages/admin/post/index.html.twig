@@ -66,10 +66,15 @@
                             {% endif %}
                         </td>
                         <td>{{post.createdAt|format_date()}}</td>
-                        <td class="d-flex justify-content-center align-items-center gap-1">
-                            <a href="" class="btn btn-sm btn-dark">Lire</a>
-                            <a href="{{path('app_admin_post_edit', {'id':post.id})}}" class="btn btn-sm btn-secondary">Modifier</a>
-                            <a href="" class="btn btn-sm btn-danger">Supprimer</a>
+                        <td class="text-center align-middle">
+                            <div class="d-flex justify-content-center align-items-center gap-1">
+                                <a href="{{path('app_admin_post_show', {'id':post.id})}}" class="btn btn-sm btn-dark">Lire</a>
+                                <a href="{{path('app_admin_post_edit', {'id':post.id})}}" class="btn btn-sm btn-secondary">Modifier</a>
+                                <form action="{{path('app_admin_post_delete', {'id':post.id})}}" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{csrf_token('post-'~post.id)}}">
+                                    <button onclick="return confirm('Confirmer la suppression?')" type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}

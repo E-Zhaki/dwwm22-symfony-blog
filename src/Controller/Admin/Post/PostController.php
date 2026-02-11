@@ -80,4 +80,25 @@ final class PostController extends AbstractController
             'post' => $post,
         ]);
     }
+
+    #[Route('/post/{id<\d+>}/delete', name: 'app_admin_post_delete', methods: ['POST'])]
+    public function delete(Post $post, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid("post-{$post->getId()}", $request->request->get('csrf_token'))) {
+            $entityManager->remove($post);
+            $entityManager->flush();
+
+            $this->addFlash('success', "L'article a été supprimé");
+        }
+
+        return $this->redirectToRoute('app_admin_post_index');
+    }
+
+    #[Route('/post/{id<\d+>}/show', name: 'app_admin_post_show', methods: ['GET'])]
+    public function show(Post $post): Response
+    {
+        return $this->render('pages/admin/post/show.html.twig', [
+            'post' => $post,
+        ]);
+    }
 }
