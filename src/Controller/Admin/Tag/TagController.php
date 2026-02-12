@@ -53,4 +53,26 @@ final class TagController extends AbstractController
             'tagForm' => $form->createView(),
         ]);
     }
+
+    #[Route('/tag/{id<\d+>}/edit', name: 'app_admin_tag_edit', methods: ['GET', 'POST'])]
+    public function edit(Tag $tag, Request $request): Response
+    {
+        $form = $this->createForm(TagFormType::class, $tag);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $tag->setUpdatedAt(new \DateTimeImmutable());
+
+            $this->entityManager->persist($tag);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Le tag a été modifié.');
+
+            return $this->redirectToRoute('app_admin_tag_index');
+        }
+
+        return $this->render('pages/admin/tag/edit.html.twig', [
+            'tagForm' => $form->createView(),
+        ]);
+    }
 }
