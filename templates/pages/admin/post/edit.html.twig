@@ -2,15 +2,33 @@
 
 {% block title %}Modifier cet article{% endblock %}
 
-{% block description %}Modifier cet article de la liste{% endblock %}
+{% block description %}{{post.description}}{% endblock %}
 
-{% block keywords %}Modifier, article{% endblock %}
+{% block keywords %}
+    {% if post.keywords %}
+        <meta name="keywords" content="{{post.keywords}}">
+    {% endif %}
+{% endblock %}
 
 {% block tiny_mce %}
 <script src="https://cdn.tiny.cloud/1/vrs8wqxdye5k6lefp89q7h1fuhhd49t3ad0tnjg7dd4qxfj4/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
 <script>
     tinymce.init({
         selector: 'textarea'
+    });
+</script>
+{% endblock %}
+
+{% block j_query %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block select2 %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#post_form_tags').select2();
     });
 </script>
 {% endblock %}
@@ -31,6 +49,11 @@
                         <label for="post_form_category">Categorie <span class="text-danger">*</span></label>
                         <div class="text-danger">{{form_errors(postForm.category)}}</div>
                         {{form_widget(postForm.category, {'attr': {'class':'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="post_form_tags">Tags</label>
+                        <div class="text-danger">{{form_errors(postForm.tags)}}</div>
+                        {{form_widget(postForm.tags, {'attr': {'class':'form-control'}})}}
                     </div>
                     <div class="mb-3">
                         <label for="post_form_description">Description <span class="text-danger">*</span></label>
