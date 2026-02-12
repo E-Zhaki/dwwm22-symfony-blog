@@ -53,15 +53,10 @@
                         <td>{{tag.updatedAt|format_date()}}</td>
                         <td class="d-flex justify-content-center align-items-center gap-1">
                             <a href="{{path('app_admin_tag_edit', {'id':tag.id})}}" class="btn btn-sm btn-secondary"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
-                            {# <form action="{{path('app_admin_tag_delete', {'id':tag.id})}}" method="post">
+                            <form action="{{path('app_admin_tag_delete', {'id':tag.id})}}" method="post">
                                 <input type="hidden" name="csrf_token" value="{{csrf_token('tag-'~tag.id)}}">
-
-                                {% if tag.posts is empty %}
-                                    <button onclick="return confirm('Confirmer la suppression de cette catégorie?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
-                                {% else %}
-                                <button onclick="return confirm('Attention!!! En supprimant cette catégorie, vous supprimerez aussi les articles qui lui sont associés?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
-                                {% endif %}
-                            </form> #}
+                                <button onclick="return confirm('Confirmer la suppression de ce tag?')" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-delete-left"></i> Supprimer</button>
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}

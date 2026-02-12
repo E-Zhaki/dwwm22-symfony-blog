@@ -66,7 +66,7 @@ final class TagController extends AbstractController
             $this->entityManager->persist($tag);
             $this->entityManager->flush();
 
-            $this->addFlash('success', 'Le tag a été modifié.');
+            $this->addFlash('success', 'Le tag a été modifié');
 
             return $this->redirectToRoute('app_admin_tag_index');
         }
@@ -74,5 +74,17 @@ final class TagController extends AbstractController
         return $this->render('pages/admin/tag/edit.html.twig', [
             'tagForm' => $form->createView(),
         ]);
+    }
+
+    #[Route('/tag/{id<\d+>}/delete', name: 'app_admin_tag_delete', methods: ['POST'])]
+    public function delete(Tag $tag, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid("tag-{$tag->getId()}", $request->request->get('csrf_token'))) {
+            $this->entityManager->remove($tag);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Le tag est supprimé');
+        }
+
+        return $this->redirectToRoute('app_admin_tag_index');
     }
 }
